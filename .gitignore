@@ -57,4 +57,5 @@ target/
 .idea/
 
 #Project specific
-data_file.xlsx
+data.xlsx
+structure.xlsx
