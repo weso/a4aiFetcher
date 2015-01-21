@@ -58,4 +58,6 @@ target/
 
 #Project specific
 data.xlsx
+~$data.xlsx
 structure.xlsx
+~$structure.xlsx
