@@ -1,4 +1,5 @@
 import xlrd
+from application.a4aiFetcher.parsing.excel_model.excel_indicator import ExcelIndicator
 
 __author__ = 'Miguel'
 
@@ -8,12 +9,13 @@ class Parser(object):
     def __init__(self, log, config):
         self._log = log
         self._config = config
+        self._indicators = []
 
     def run(self):
         self._log.info("Running parser")
-        indicator_sheet, country_sheet, data_sheet = self.initialize_sheets()
+        indicator_sheet, data_sheet = self.initialize_sheets()
         self.retrieve_indicators(indicator_sheet)
-        self.retrieve_countries(country_sheet)
+        self.store_indicators()
         self.retrieve_data(data_sheet)
         self._log.info("Parsing finished")
 
@@ -22,13 +24,11 @@ class Parser(object):
         data_file_name = self._config.get("DATA_ACCESS", "FILE_NAME")
 
         indicator_sheet_number = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_SHEET_NUMBER")
-        country_sheet_number = self._config.getint("STRUCTURE_ACCESS", "COUNTRY_SHEET_NUMBER")
         data_sheet_number = self._config.getint("DATA_ACCESS", "SHEET_NUMBER")
 
         indicator_sheet = self.get_sheet(structure_file_name, indicator_sheet_number)
-        country_sheet = self.get_sheet(structure_file_name, country_sheet_number)
         data_sheet = self.get_sheet(data_file_name, data_sheet_number)
-        return indicator_sheet, country_sheet, data_sheet
+        return indicator_sheet, data_sheet
 
     @staticmethod
     def get_sheet(file_name, sheet_number):
@@ -48,17 +48,12 @@ class Parser(object):
             name = indicator_sheet.cell(row_number, name_column).value
             _type = indicator_sheet.cell(row_number, type_column).value
             subindex_code = indicator_sheet.cell(row_number, subindex_column).value
-            print code + " " + name + " " +  _type + " " + subindex_code
+            indicator = ExcelIndicator(code, name, _type, subindex_code)
+            self._indicators.append(indicator)
+            print indicator.code
 
-    def retrieve_countries(self, country_sheet):
-        name_column = self._config.getint("STRUCTURE_ACCESS", "COUNTRY_NAME_COLUMN")
-        type_column = self._config.getint("STRUCTURE_ACCESS", "COUNTRY_TYPE_COLUMN")
-        start_row = self._config.getint("STRUCTURE_ACCESS", "COUNTRY_START_ROW")
-
-        for row_number in range(start_row, country_sheet.nrows):
-            name = country_sheet.cell(row_number, name_column).value
-            _type = country_sheet.cell(row_number, type_column).value
-            print name + " " + _type
+    def store_indicators(self):
+        pass
 
     def retrieve_data(self, data_sheet):
         countries_column = self._config.getint("DATA_ACCESS", "COUNTRIES_COLUMN")
@@ -69,4 +64,3 @@ class Parser(object):
             for column_number in range(int(indicator_columns_range[0]), int(indicator_columns_range[1]) + 1):
                 indicator_name = data_sheet.cell(indicator_names_row, column_number).value
                 observation_value = data_sheet.cell(row_number, column_number).value
-                print country_name + " " + indicator_name + " " + str(observation_value)

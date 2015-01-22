@@ -1,6 +1,6 @@
 import logging
 import ConfigParser
-from application.parser import Parser
+from parsing.parser import Parser
 
 __author__ = 'Miguel'
 
