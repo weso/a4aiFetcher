@@ -51,7 +51,8 @@ class Parser(object):
         start_row = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_START_ROW")
 
         for row_number in range(start_row, indicator_sheet.nrows):
-            code = indicator_sheet.cell(row_number, code_column).value
+            retrieved_code = indicator_sheet.cell(row_number, code_column).value
+            code = retrieved_code.upper().replace(" ", "_")
             name = indicator_sheet.cell(row_number, name_column).value
             _type = indicator_sheet.cell(row_number, type_column).value
             subindex_code = indicator_sheet.cell(row_number, subindex_column).value
@@ -62,7 +63,13 @@ class Parser(object):
     def store_indicators(self, indicator_repo):
         for excel_indicator in self._excel_indicators:
             indicator = Excel2Dom.excel_indicator_to_dom(excel_indicator)
-            indicator_repo.insert_indicator(indicator, indicator_uri="EJEMPLO_URI", index_name="INDEX")
+            indicator_uri = self._config.get("OTHERS", "HOST") + indicator.code
+            indicator_repo.insert_indicator(indicator,
+                                            indicator_uri=indicator_uri,
+                                            index_name="INDEX",
+                                            subindex_name=excel_indicator.subindex_code,
+                                            provider_name=self._config.get("OTHERS", "WF_NAME"),
+                                            provider_url=self._config.get("OTHERS", "WF_URL"))
 
     def retrieve_data(self, data_sheet):
         countries_column = self._config.getint("DATA_ACCESS", "COUNTRIES_COLUMN")
