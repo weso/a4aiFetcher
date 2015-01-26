@@ -55,8 +55,8 @@ class Parser(object):
             code = retrieved_code.upper().replace(" ", "_")
             name = indicator_sheet.cell(row_number, name_column).value
             _type = indicator_sheet.cell(row_number, type_column).value
-            subindex_code = indicator_sheet.cell(row_number, subindex_column).value
-            indicator = ExcelIndicator(code, name, _type, subindex_code)
+            subindex_name = indicator_sheet.cell(row_number, subindex_column).value
+            indicator = ExcelIndicator(code, name, _type, subindex_name)
             self._excel_indicators.append(indicator)
             print indicator.code
 
@@ -67,7 +67,7 @@ class Parser(object):
             indicator_repo.insert_indicator(indicator,
                                             indicator_uri=indicator_uri,
                                             index_name="INDEX",
-                                            subindex_name=excel_indicator.subindex_code,
+                                            subindex_name=excel_indicator.subindex_name,
                                             provider_name=self._config.get("OTHERS", "WF_NAME"),
                                             provider_url=self._config.get("OTHERS", "WF_URL"))
 
