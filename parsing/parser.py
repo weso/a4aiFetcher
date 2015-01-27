@@ -2,6 +2,7 @@ import xlrd
 from application.a4aiFetcher.parsing.excel_model.excel_indicator import ExcelIndicator
 from infrastructure.mongo_repos.indicator_repository import IndicatorRepository
 from application.a4aiFetcher.parsing.excel2dom import Excel2Dom
+from application.a4aiFetcher.parsing.utils import *
 
 __author__ = 'Miguel'
 
@@ -49,14 +50,21 @@ class Parser(object):
         type_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_TYPE_COLUMN")
         subindex_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_SUBINDEX_COLUMN")
         start_row = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_START_ROW")
+        provider_name_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_PROVIDER_NAME_COLUMN")
+        provider_url_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_PROVIDER_URL_COLUMN")
+        republishable_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_REPUBLISHABLE_COLUMN")
 
         for row_number in range(start_row, indicator_sheet.nrows):
             retrieved_code = indicator_sheet.cell(row_number, code_column).value
             code = retrieved_code.upper().replace(" ", "_")
             name = indicator_sheet.cell(row_number, name_column).value
             _type = indicator_sheet.cell(row_number, type_column).value
-            subindex_name = indicator_sheet.cell(row_number, subindex_column).value
-            indicator = ExcelIndicator(code, name, _type, subindex_name)
+            subindex_code = indicator_sheet.cell(row_number, subindex_column).value
+            provider_name = indicator_sheet.cell(row_number, provider_name_column).value
+            provider_url = indicator_sheet.cell(row_number, provider_url_column).value
+            retrieved_republishable = indicator_sheet.cell(row_number, republishable_column).value
+            republishable = string_to_bool(retrieved_republishable)
+            indicator = ExcelIndicator(code, name, _type, subindex_code, provider_name, provider_url, republishable)
             self._excel_indicators.append(indicator)
             print indicator.code
 
@@ -67,9 +75,9 @@ class Parser(object):
             indicator_repo.insert_indicator(indicator,
                                             indicator_uri=indicator_uri,
                                             index_name="INDEX",
-                                            subindex_name=excel_indicator.subindex_name,
-                                            provider_name=self._config.get("OTHERS", "WF_NAME"),
-                                            provider_url=self._config.get("OTHERS", "WF_URL"))
+                                            subindex_name=excel_indicator.subindex_code,
+                                            provider_name=indicator.provider_name,
+                                            provider_url=indicator.provider_url)
 
     def retrieve_data(self, data_sheet):
         countries_column = self._config.getint("DATA_ACCESS", "COUNTRIES_COLUMN")

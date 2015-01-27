@@ -10,6 +10,8 @@ class Excel2Dom(object):
         indicator = create_indicator(type=excel_indicator.type,
                                      name=excel_indicator.name,
                                      indicator=excel_indicator.code,
-                                     republish=True,
-                                     description=excel_indicator.name)
+                                     republish=excel_indicator.republishable,
+                                     description=excel_indicator.name,
+                                     provider_name=excel_indicator.provider_name,
+                                     provider_url=excel_indicator.provider_url)
         return indicator
