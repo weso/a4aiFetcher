@@ -63,7 +63,7 @@ class Parser(object):
     def store_indicators(self, indicator_repo):
         for excel_indicator in self._excel_indicators:
             indicator = Excel2Dom.excel_indicator_to_dom(excel_indicator)
-            indicator_uri = self._config.get("OTHERS", "HOST") + indicator.code
+            indicator_uri = self._config.get("OTHERS", "HOST") + indicator.indicator
             indicator_repo.insert_indicator(indicator,
                                             indicator_uri=indicator_uri,
                                             index_name="INDEX",
