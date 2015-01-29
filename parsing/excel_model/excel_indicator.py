@@ -1,5 +1,6 @@
 __author__ = 'Miguel'
 
+
 class ExcelIndicator(object):
 
     def __init__(self, code, name, type, subindex_code, provider_name, provider_url, republishable):
