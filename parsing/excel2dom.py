@@ -1,4 +1,5 @@
 from webindex.domain.model.indicator.indicator import *
+from webindex.domain.model.observation.observation import *
 
 __author__ = 'Miguel'
 
@@ -15,3 +16,6 @@ class Excel2Dom(object):
                                      provider_name=excel_indicator.provider_name,
                                      provider_url=excel_indicator.provider_url)
         return indicator
+
+    def excel_observation_to_dom(excel_observation):
+        pass

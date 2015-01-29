@@ -4,6 +4,8 @@ from application.a4aiFetcher.parsing.utils import *
 from application.a4aiFetcher.parsing.excel_model.excel_indicator import ExcelIndicator
 from application.a4aiFetcher.parsing.excel_model.excel_observation import ExcelObservation
 from infrastructure.mongo_repos.indicator_repository import IndicatorRepository
+from infrastructure.mongo_repos.observation_repository import ObservationRepository
+from infrastructure.mongo_repos.area_repository import AreaRepository
 
 
 __author__ = 'Miguel'
@@ -20,10 +22,11 @@ class Parser(object):
     def run(self):
         self._log.info("Running parser")
         indicator_sheet, index_subindex_sheet = self.initialize_sheets()
-        indicator_repo = self.initialize_repositories()
-        self.retrieve_indicators(indicator_sheet)
-        self.store_indicators(indicator_repo)
+        indicator_repo, observation_repo, area_repo = self.initialize_repositories()
+        # self.retrieve_indicators(indicator_sheet)
+        # self.store_indicators(indicator_repo)
         self.retrieve_grouped_observations(index_subindex_sheet)
+        self.store_grouped_observations(observation_repo, indicator_repo, area_repo)
         self._log.info("Parsing finished")
 
     def initialize_sheets(self):
@@ -39,7 +42,9 @@ class Parser(object):
 
     def initialize_repositories(self):
         indicator_repo = IndicatorRepository(self._config.get("CONNECTION", "MONGO_IP"))
-        return indicator_repo
+        observation_repo = ObservationRepository(self._config.get("CONNECTION", "MONGO_IP"))
+        area_repo = AreaRepository(self._config.get("CONNECTION", "MONGO_IP"))
+        return indicator_repo, observation_repo, area_repo
 
     @staticmethod
     def get_sheet(file_name, sheet_number):
@@ -98,3 +103,10 @@ class Parser(object):
                     index_overall_ranking = int(index_subindex_sheet.cell(row_number, ranking_column).value)
                 observation = ExcelObservation(country_name, indicator_code, observation_value, index_overall_ranking)
                 self._excel_observations.append(observation)
+
+    def store_grouped_observations(self, observation_repo, indicator_repo, area_repo):
+        indicators = indicator_repo.find_indicators_index() + indicator_repo.find_indicators_sub_indexes()
+        areas = area_repo.find_countries("name")
+        for excel_observation in self._excel_observations:
+            area = area_repo.find_by_name(excel_observation.country_name)
+            observation = Excel2Dom.excel_observation_to_dom()
