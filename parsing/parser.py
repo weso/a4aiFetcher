@@ -1,12 +1,11 @@
 import xlrd
-from application.a4aiFetcher.parsing.excel2dom import Excel2Dom
+
 from application.a4aiFetcher.parsing.utils import *
 from application.a4aiFetcher.parsing.excel_model.excel_indicator import ExcelIndicator
 from application.a4aiFetcher.parsing.excel_model.excel_observation import ExcelObservation
 from infrastructure.mongo_repos.indicator_repository import IndicatorRepository
 from infrastructure.mongo_repos.observation_repository import ObservationRepository
 from infrastructure.mongo_repos.area_repository import AreaRepository
-from webindex.domain.model.area.country import Country
 
 
 __author__ = 'Miguel'
@@ -17,15 +16,14 @@ class Parser(object):
     def __init__(self, log, config):
         self._log = log
         self._config = config
-        self._excel_indicators = []
-        self._excel_observations = []
+        self._indicator_repo, self._observation_repo, self._area_repo = self.initialize_repositories()
 
     def run(self):
         self._log.info("Running parser")
         indicator_sheet, index_subindex_sheet = self.initialize_sheets()
         indicator_repo, observation_repo, area_repo = self.initialize_repositories()
-        # self.retrieve_indicators(indicator_sheet)
-        # self.store_indicators(indicator_repo)
+        self.retrieve_indicators(indicator_sheet)
+        self.store_indicators(indicator_repo)
         self.retrieve_grouped_observations(index_subindex_sheet)
         self.store_grouped_observations(observation_repo, indicator_repo, area_repo)
         self._log.info("Parsing finished")
@@ -78,7 +76,7 @@ class Parser(object):
 
     def store_indicators(self, indicator_repo):
         for excel_indicator in self._excel_indicators:
-            indicator = Excel2Dom.excel_indicator_to_dom(excel_indicator)
+            indicator = excel_indicator_to_dom(excel_indicator)
             indicator_uri = self._config.get("OTHERS", "HOST") + indicator.indicator
             indicator_repo.insert_indicator(indicator,
                                             indicator_uri=indicator_uri,
@@ -109,7 +107,7 @@ class Parser(object):
         for excel_observation in self._excel_observations:
             area = area_repo.find_by_name(excel_observation.country_name)
             indicator = indicator_repo.find_indicators_by_code(excel_observation.indicator_code)
-            observation = Excel2Dom.excel_observation_to_dom(excel_observation, area, indicator)
+            observation = excel_observation_to_dom(excel_observation, area, indicator)
             observation_uri = self._config.get("OTHERS", "HOST") + "observations/" + indicator.indicator + "/" \
                               + area.iso3 + "/" + str(observation.year.value)
             observation_repo.insert_observation(observation, observation_uri=observation_uri, area_iso3_code=area.iso3,
