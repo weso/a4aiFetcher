@@ -4,7 +4,6 @@ from application.a4aiFetcher.parsing.grouped_observation_parser import GroupedOb
 from application.a4aiFetcher.parsing.indicator_parser import IndicatorParser
 from application.a4aiFetcher.parsing.primary_observation_parser import PrimaryObservationParser
 from application.a4aiFetcher.parsing.secondary_observation_parser import SecondaryObservationParser
-from parsing.parser import Parser
 
 __author__ = 'Miguel'
 
