@@ -28,9 +28,9 @@ def parse(log, config):
     primary_observation_parser = PrimaryObservationParser(log, config)
     grouped_observation_parser = GroupedObservationParser(log, config)
 
-    indicator_parser.run()
-    secondary_observation_parser.run()
-    primary_observation_parser.run()
+    # indicator_parser.run()
+    # secondary_observation_parser.run()
+    # primary_observation_parser.run()
     grouped_observation_parser.run()
 
 
