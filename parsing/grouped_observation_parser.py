@@ -15,7 +15,8 @@ class GroupedObservationParser(Parser):
         self._log.info("Running grouped observation parser")
         grouped_obs_sheet = self.initialize_grouped_obs_sheet()
         self.retrieve_grouped_observations(grouped_obs_sheet)
-        self.store_grouped_observations(self._observation_repo, self._indicator_repo, self._area_repo)
+        self.store_grouped_observations()
+        self.rank_observations_by_type()
         self._log.info("Finished parsing grouped observations")
 
     def initialize_grouped_obs_sheet(self):
@@ -45,18 +46,35 @@ class GroupedObservationParser(Parser):
                 self._excel_grouped_observations.append(observation)
                 column_offset += 4
 
-    def store_grouped_observations(self, observation_repo, indicator_repo, area_repo):
+    def store_grouped_observations(self):
         for excel_observation in self._excel_grouped_observations:
-            print excel_observation.country_name
-            area = area_repo.find_by_name(excel_observation.country_name)
-            indicator = indicator_repo.find_indicators_by_code(excel_observation.indicator_code)
+            area = self._area_repo.find_by_name(excel_observation.country_name)
+            indicator = self._indicator_repo.find_indicators_by_code(excel_observation.indicator_code)
             observation = excel_observation_to_dom(excel_observation, area, indicator)
             observation_uri = self._config.get("OTHERS", "HOST") + "observations/" + indicator.indicator + "/" \
                               + area.iso3 + "/" + str(observation.year.value)
-            observation_repo.insert_observation(observation, observation_uri=observation_uri, area_iso3_code=area.iso3,
-                                                indicator_code=indicator.indicator,
-                                                year_literal=str(observation.year.value), area_name=area.name,
-                                                indicator_name=indicator.name, republish=indicator.republish,
-                                                area_code=area.area, provider_name=indicator.provider_name,
-                                                provider_url=indicator.provider_url, short_name=area.short_name,
-                                                area_type=area.type, ranking=excel_observation.ranking)
+            self._observation_repo.insert_observation(observation, observation_uri=observation_uri,
+                                                      area_iso3_code=area.iso3, indicator_code=indicator.indicator,
+                                                      year_literal=str(observation.year.value), area_name=area.name,
+                                                      indicator_name=indicator.name, republish=indicator.republish,
+                                                      area_code=area.area, provider_name=indicator.provider_name,
+                                                      provider_url=indicator.provider_url, short_name=area.short_name,
+                                                      area_type=area.type, ranking=excel_observation.ranking)
+
+    def rank_observations_by_type(self):
+        indicators = self._indicator_repo.find_indicators()
+        for indicator in indicators:
+            emerging_observations = self._observation_repo.find_observations(indicator_code=indicator.indicator,
+                                                                             area_type="Emerging")
+            developing_observations = self._observation_repo.find_observations(indicator_code=indicator.indicator,
+                                                                               area_type="Developing")
+            emerging_ordered = sorted(emerging_observations, key=lambda observation: observation.value)
+            developing_ordered = sorted(developing_observations, key=lambda observation: observation.value)
+            rank_emerging = len(emerging_ordered)
+            rank_developing = len(developing_ordered)
+            for emerging_obs in emerging_ordered:
+                self._observation_repo.update_observation_ranking_type(emerging_obs, rank_emerging)
+                rank_emerging -= 1
+            for developing_obs in developing_ordered:
+                self._observation_repo.update_observation_ranking_type(developing_obs, rank_developing)
+                rank_developing -= 1
