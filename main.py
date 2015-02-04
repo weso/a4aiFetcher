@@ -30,8 +30,8 @@ def parse(log, config):
 
     # indicator_parser.run()
     # secondary_observation_parser.run()
-    # primary_observation_parser.run()
-    grouped_observation_parser.run()
+    primary_observation_parser.run()
+    # grouped_observation_parser.run()
 
 
 if __name__ == "__main__":
