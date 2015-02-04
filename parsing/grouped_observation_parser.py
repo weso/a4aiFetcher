@@ -21,9 +21,9 @@ class GroupedObservationParser(Parser):
 
     def initialize_grouped_obs_sheet(self):
         data_file_name = self._config.get("DATA_ACCESS", "FILE_NAME")
-        index_subindex_sheet_number = self._config.getint("GROUPED_OBSERVATIONS", "SHEET_NUMBER")
-        index_subindex_sheet = self.get_sheet(data_file_name, index_subindex_sheet_number)
-        return index_subindex_sheet
+        grouped_sheet_number = self._config.getint("GROUPED_OBSERVATIONS", "SHEET_NUMBER")
+        grouped_obs_sheet = self.get_sheet(data_file_name, grouped_sheet_number)
+        return grouped_obs_sheet
 
     def retrieve_grouped_observations(self, grouped_obs_sheet):
         country_column = self._config.getint("GROUPED_OBSERVATIONS", "COUNTRY_COLUMN")
