@@ -3,6 +3,7 @@ import ConfigParser
 from application.a4aiFetcher.parsing.grouped_observation_parser import GroupedObservationParser
 from application.a4aiFetcher.parsing.indicator_parser import IndicatorParser
 from application.a4aiFetcher.parsing.primary_observation_parser import PrimaryObservationParser
+from application.a4aiFetcher.parsing.ranker import Ranker
 from application.a4aiFetcher.parsing.secondary_observation_parser import SecondaryObservationParser
 
 __author__ = 'Miguel'
@@ -27,11 +28,13 @@ def parse(log, config):
     secondary_observation_parser = SecondaryObservationParser(log, config)
     primary_observation_parser = PrimaryObservationParser(log, config)
     grouped_observation_parser = GroupedObservationParser(log, config)
+    ranker = Ranker(log, config)
 
-    # indicator_parser.run()
-    # secondary_observation_parser.run()
-    # primary_observation_parser.run()
+    indicator_parser.run()
+    secondary_observation_parser.run()
+    primary_observation_parser.run()
     grouped_observation_parser.run()
+    ranker.run()
 
 
 if __name__ == "__main__":
