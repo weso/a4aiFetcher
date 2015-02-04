@@ -17,9 +17,11 @@ class Ranker(object):
         return indicator_repo, observation_repo
 
     def run(self):
+        self._log.info("Ranking observations")
         self.rank_observations()
         self.rank_emerging_countries_observations()
         self.rank_developing_countries_observations()
+        self._log.info("Finished ranking observations")
 
     def rank_observations(self):
         indicators = self._indicator_repo.find_indicators()
