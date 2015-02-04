@@ -1,5 +1,6 @@
 from application.a4aiFetcher.parsing.excel_model.excel_observation import ExcelObservation
 from application.a4aiFetcher.parsing.parser import Parser
+from application.a4aiFetcher.parsing.utils import excel_observation_to_dom
 
 __author__ = 'Miguel'
 
@@ -15,7 +16,6 @@ class PrimaryObservationParser(Parser):
         primary_obs_sheet = self.initialize_primary_obs_sheet()
         self.retrieve_primary_observations(primary_obs_sheet)
         self.store_primary_observations()
-        self.rank_observations_by_type()
         self._log.info("Finished parsing primary observations")
 
     def initialize_primary_obs_sheet(self):
@@ -37,10 +37,18 @@ class PrimaryObservationParser(Parser):
                 observation_value = primary_obs_sheet.cell(row_number, column_number).value
                 observation = ExcelObservation(country_name, indicator_code, observation_value)
                 self._excel_primary_observations.append(observation)
-                print observation.country_name + " " + observation.indicator_code + " " + str(observation.value)
 
     def store_primary_observations(self):
-        pass
-
-    def rank_observations_by_type(self):
-        pass
+        for excel_observation in self._excel_primary_observations:
+            area = self._area_repo.find_by_name(excel_observation.country_name)
+            indicator = self._indicator_repo.find_indicators_by_code(excel_observation.indicator_code)
+            observation = excel_observation_to_dom(excel_observation, area, indicator)
+            observation_uri = self._config.get("OTHERS", "HOST") + "observations/" + indicator.indicator + "/" \
+                              + area.iso3 + "/" + str(observation.year.value)
+            self._observation_repo.insert_observation(observation, observation_uri=observation_uri,
+                                                      area_iso3_code=area.iso3, indicator_code=indicator.indicator,
+                                                      year_literal=str(observation.year.value), area_name=area.name,
+                                                      indicator_name=indicator.name, republish=indicator.republish,
+                                                      area_code=area.area, provider_name=indicator.provider_name,
+                                                      provider_url=indicator.provider_url, short_name=area.short_name,
+                                                      area_type=area.type)
