@@ -10,4 +10,16 @@ class SecondaryObservationParser(Parser):
 
     def run(self):
         self._log.info("Running secondary observation parser")
+        secondary_obs_sheet = self.initialize_secondary_obs_sheet()
+        self.retrieve_secondary_observations(secondary_obs_sheet)
+        self.store_secondary_observations()
         self._log.info("Finished parsing secondary observations")
+
+    def initialize_secondary_obs_sheet(self):
+        pass
+
+    def retrieve_secondary_observations(self, secondary_obs_sheet):
+        pass
+
+    def store_secondary_observations(self):
+        pass
