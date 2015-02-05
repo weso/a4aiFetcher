@@ -27,30 +27,33 @@ class Ranker(object):
         indicators = self._indicator_repo.find_indicators()
         for indicator in indicators:
             observations = self._observation_repo.find_observations(indicator_code=indicator.indicator)
-            ordered = sorted(observations, key=lambda observation: observation.value)
-            rank = len(ordered)
+            ordered = sorted(observations, key=lambda observation: observation.value, reverse=True)
+            rank = 1
             for obs in ordered:
-                self._observation_repo.update_observation_ranking(obs, rank)
-                rank -= 1
+                if obs.value != "":
+                    self._observation_repo.update_observation_ranking(obs, rank)
+                    rank += 1
 
     def rank_emerging_countries_observations(self):
         indicators = self._indicator_repo.find_indicators()
         for indicator in indicators:
             emerging_observations = self._observation_repo.find_observations(indicator_code=indicator.indicator,
                                                                              area_type="Emerging")
-            emerging_ordered = sorted(emerging_observations, key=lambda observation: observation.value)
-            rank_emerging = len(emerging_ordered)
+            emerging_ordered = sorted(emerging_observations, key=lambda observation: observation.value, reverse=True)
+            rank_emerging = 1
             for emerging_obs in emerging_ordered:
-                self._observation_repo.update_observation_ranking_type(emerging_obs, rank_emerging)
-                rank_emerging -= 1
+                if emerging_obs.value != "":
+                    self._observation_repo.update_observation_ranking_type(emerging_obs, rank_emerging)
+                    rank_emerging += 1
 
     def rank_developing_countries_observations(self):
         indicators = self._indicator_repo.find_indicators()
         for indicator in indicators:
             developing_observations = self._observation_repo.find_observations(indicator_code=indicator.indicator,
                                                                                area_type="Developing")
-            developing_ordered = sorted(developing_observations, key=lambda observation: observation.value)
-            rank_developing = len(developing_ordered)
+            developing_ordered = sorted(developing_observations, key=lambda observation: observation.value, reverse=True)
+            rank_developing = 1
             for developing_obs in developing_ordered:
-                self._observation_repo.update_observation_ranking_type(developing_obs, rank_developing)
-                rank_developing -= 1
+                if developing_obs.value != "":
+                    self._observation_repo.update_observation_ranking_type(developing_obs, rank_developing)
+                    rank_developing += 1
