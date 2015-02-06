@@ -18,12 +18,19 @@ class Ranker(object):
 
     def run(self):
         self._log.info("Ranking observations")
+        print "Ranking observations"
+
         self.rank_observations()
         self.rank_emerging_countries_observations()
         self.rank_developing_countries_observations()
+
         self._log.info("Finished ranking observations")
+        print "Finished ranking observations"
 
     def rank_observations(self):
+        self._log.info("\tRanking all countries observations...")
+        print "\tRanking all countries observations..."
+
         indicators = self._indicator_repo.find_indicators()
         for indicator in indicators:
             observations = self._observation_repo.find_observations(indicator_code=indicator.indicator)
@@ -35,6 +42,9 @@ class Ranker(object):
                     rank += 1
 
     def rank_emerging_countries_observations(self):
+        self._log.info("\tRanking observations by type of emerging countries")
+        print "\tRanking observations by type of emerging countries"
+
         indicators = self._indicator_repo.find_indicators()
         for indicator in indicators:
             emerging_observations = self._observation_repo.find_observations(indicator_code=indicator.indicator,
@@ -47,6 +57,9 @@ class Ranker(object):
                     rank_emerging += 1
 
     def rank_developing_countries_observations(self):
+        self._log.info("\tRanking observations by type of developing countries")
+        print "\tRanking observations by type of developing countries"
+
         indicators = self._indicator_repo.find_indicators()
         for indicator in indicators:
             developing_observations = self._observation_repo.find_observations(indicator_code=indicator.indicator,
