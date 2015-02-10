@@ -64,4 +64,4 @@ class SecondaryObservationParser(Parser):
                                                       indicator_name=indicator.name, republish=indicator.republish,
                                                       area_code=area.area, provider_name=indicator.provider_name,
                                                       provider_url=indicator.provider_url, short_name=area.short_name,
-                                                      area_type=area.type)
+                                                      area_type=area.type, indicator_type=indicator.type)
