@@ -3,7 +3,7 @@ __author__ = 'Miguel'
 
 class ExcelIndicator(object):
 
-    def __init__(self, code, name, type, subindex_code, provider_name, provider_url, republishable):
+    def __init__(self, code, name, type, subindex_code, provider_name, provider_url, republishable, is_percentage):
         self._code = code
         self._name = name
         self._type = type
@@ -11,6 +11,7 @@ class ExcelIndicator(object):
         self._provider_name = provider_name
         self._provider_url = provider_url
         self._republishable = republishable
+        self._is_percentage = is_percentage
 
     @property
     def code(self):
@@ -39,3 +40,7 @@ class ExcelIndicator(object):
     @property
     def republishable(self):
         return self._republishable
+
+    @property
+    def is_percentage(self):
+        return self._is_percentage
