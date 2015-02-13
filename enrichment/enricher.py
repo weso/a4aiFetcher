@@ -22,12 +22,24 @@ class Enricher(object):
         areas = self._area_repo.find_countries("iso3")
 
         for indicator_code in indicator_codes:
+            print indicator_code
             for area in areas:
                 uri = uri_pattern.replace("{ISO3}", area.iso3).replace("{INDICATOR_CODE}", indicator_code)
                 response = get_json(uri, {"format": "json"})
-                last_year_data = response[1][0]
+                value = None
+                year_index = 0
+                while value is None:
+                    last_year_data = response[1][year_index]
+                    value = last_year_data['value']
+                    year_index += 1
+                    if year_index == len(response[1]) and value is None:
+                        break
                 dict_key = area.iso3 + "-" + indicator_code
-                self._retrieved_data[dict_key] = last_year_data
+                if value is not None:
+                    self._retrieved_data[dict_key] = last_year_data
+                    print "\t" + area.iso3 + "(" + area.name + ")" + last_year_data['date'] + "-->" + str(value)
+                else:
+                    print "\t" + area.iso3 + "(" + area.name + ")" + " has no values"
 
     def enrich(self):
         pass
