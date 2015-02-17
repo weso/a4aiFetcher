@@ -32,11 +32,11 @@ def parse(log, config):
     ranker = Ranker(log, config)
     enricher = Enricher(log, config)
 
-    # indicator_parser.run()
-    # secondary_observation_parser.run()
-    # primary_observation_parser.run()
-    # grouped_observation_parser.run()
-    # ranker.run()
+    indicator_parser.run()
+    secondary_observation_parser.run()
+    primary_observation_parser.run()
+    grouped_observation_parser.run()
+    ranker.run()
     enricher.run()
 
 
