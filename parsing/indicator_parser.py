@@ -14,27 +14,21 @@ class IndicatorParser(Parser):
     def run(self):
         self._log.info("Running indicator parser")
         print "Running indicator parser"
+        indicator_sheet = self._initialize_indicator_sheet()
+        self._retrieve_indicators(indicator_sheet)
+        self._store_indicators(self._indicator_repo)
 
-        indicator_sheet = self.initialize_indicator_sheet()
-        self.retrieve_indicators(indicator_sheet)
-        self.store_indicators(self._indicator_repo)
-
-        self._log.info("Finished parsing indicators")
-        print "Finished parsing indicators"
-
-    def initialize_indicator_sheet(self):
+    def _initialize_indicator_sheet(self):
         self._log.info("\tGetting indicators sheet...")
         print "\tGetting indicators sheet..."
-
         structure_file_name = self._config.get("STRUCTURE_ACCESS", "FILE_NAME")
         indicator_sheet_number = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_SHEET_NUMBER")
-        indicator_sheet = self.get_sheet(structure_file_name, indicator_sheet_number)
+        indicator_sheet = self._get_sheet(structure_file_name, indicator_sheet_number)
         return indicator_sheet
 
-    def retrieve_indicators(self, indicator_sheet):
+    def _retrieve_indicators(self, indicator_sheet):
         self._log.info("\tRetrieving indicators...")
         print "\tRetrieving indicators..."
-
         code_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_CODE_COLUMN")
         name_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_NAME_COLUMN")
         type_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_TYPE_COLUMN")
@@ -44,7 +38,6 @@ class IndicatorParser(Parser):
         provider_url_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_PROVIDER_URL_COLUMN")
         republishable_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_REPUBLISHABLE_COLUMN")
         is_percentage_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_IS_PERCENTAGE_COLUMN")
-
         for row_number in range(start_row, indicator_sheet.nrows):
             retrieved_code = indicator_sheet.cell(row_number, code_column).value
             code = retrieved_code.upper().replace(" ", "_")
@@ -61,10 +54,9 @@ class IndicatorParser(Parser):
                                        is_percentage)
             self._excel_indicators.append(indicator)
 
-    def store_indicators(self, indicator_repo):
+    def _store_indicators(self, indicator_repo):
         self._log.info("\tStoring indicators...")
         print "\tStoring indicators..."
-
         for excel_indicator in self._excel_indicators:
             indicator = excel_indicator_to_dom(excel_indicator)
             indicator_uri = self._config.get("OTHERS", "HOST") + indicator.indicator
