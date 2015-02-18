@@ -5,6 +5,11 @@ from infrastructure.mongo_repos.area_repository import AreaRepository
 
 __author__ = 'Miguel'
 
+"""
+This superclass models the various parsers that will retrieve and store the data
+and implements their common functions
+"""
+
 
 class Parser(object):
 
@@ -19,6 +24,9 @@ class Parser(object):
         area_repo = AreaRepository(self._config.get("CONNECTION", "MONGO_IP"))
         return indicator_repo, observation_repo, area_repo
 
+    """
+
+    """
     @staticmethod
     def _get_sheet(file_name, sheet_number):
         book = xlrd.open_workbook(file_name)
