@@ -6,8 +6,7 @@ __author__ = 'Miguel'
 
 
 def string_to_bool(string):
-    ret = string in ["True", "true"]
-    return ret
+    return string in ["True", "true"]
 
 
 def excel_indicator_to_dom(excel_indicator):

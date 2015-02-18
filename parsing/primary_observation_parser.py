@@ -14,32 +14,25 @@ class PrimaryObservationParser(Parser):
     def run(self):
         self._log.info("Running primary observation parser")
         print "Running primary observation parser"
+        primary_obs_sheet = self._initialize_primary_obs_sheet()
+        self._retrieve_primary_observations(primary_obs_sheet)
+        self._store_primary_observations()
 
-        primary_obs_sheet = self.initialize_primary_obs_sheet()
-        self.retrieve_primary_observations(primary_obs_sheet)
-        self.store_primary_observations()
-
-        self._log.info("Finished parsing primary observations")
-        print "Finished parsing primary observations"
-
-    def initialize_primary_obs_sheet(self):
+    def _initialize_primary_obs_sheet(self):
         self._log.info("\tGetting primary observations sheet...")
         print "\tGetting primary observations sheet..."
-
         data_file_name = self._config.get("DATA_ACCESS", "FILE_NAME")
         primary_sheet_number = self._config.getint("PRIMARY_OBSERVATIONS", "SHEET_NUMBER")
-        primary_obs_sheet = self.get_sheet(data_file_name, primary_sheet_number)
+        primary_obs_sheet = self._get_sheet(data_file_name, primary_sheet_number)
         return primary_obs_sheet
 
-    def retrieve_primary_observations(self, primary_obs_sheet):
+    def _retrieve_primary_observations(self, primary_obs_sheet):
         self._log.info("\tRetrieving primary observations...")
         print "\tRetrieving primary observations..."
-
         country_column = self._config.getint("PRIMARY_OBSERVATIONS", "COUNTRY_COLUMN")
         country_start_row = self._config.getint("PRIMARY_OBSERVATIONS", "COUNTRY_START_ROW")
         indicator_codes_row = self._config.getint("PRIMARY_OBSERVATIONS", "INDICATOR_CODES_ROW")
         indicator_start_column = self._config.getint("PRIMARY_OBSERVATIONS", "INDICATOR_START_COLUMN")
-
         for row_number in range(country_start_row, primary_obs_sheet.nrows):
             for column_number in range(indicator_start_column, primary_obs_sheet.ncols):
                 country_name = primary_obs_sheet.cell(row_number, country_column).value
@@ -48,7 +41,7 @@ class PrimaryObservationParser(Parser):
                 observation = ExcelObservation(country_name, indicator_code, observation_value)
                 self._excel_primary_observations.append(observation)
 
-    def store_primary_observations(self):
+    def _store_primary_observations(self):
         self._log.info("\tStoring primary observations...")
         print "\tStoring primary observations..."
         for excel_observation in self._excel_primary_observations:

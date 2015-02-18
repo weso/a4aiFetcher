@@ -3,10 +3,10 @@ __author__ = 'Miguel'
 
 class ExcelIndicator(object):
 
-    def __init__(self, code, name, type, subindex_code, provider_name, provider_url, republishable, is_percentage):
+    def __init__(self, code, name, _type, subindex_code, provider_name, provider_url, republishable, is_percentage):
         self._code = code
         self._name = name
-        self._type = type
+        self._type = _type
         self._subindex_code = subindex_code
         self._provider_name = provider_name
         self._provider_url = provider_url

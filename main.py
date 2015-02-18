@@ -22,23 +22,25 @@ def run():
     config = ConfigParser.RawConfigParser()
     config.read("configuration.ini")
     parse(log, config)
+    rank(log, config)
+    enrich(log, config)
 
 
 def parse(log, config):
-    indicator_parser = IndicatorParser(log, config)
-    secondary_observation_parser = SecondaryObservationParser(log, config)
-    primary_observation_parser = PrimaryObservationParser(log, config)
-    grouped_observation_parser = GroupedObservationParser(log, config)
+    IndicatorParser(log, config).run()
+    SecondaryObservationParser(log, config).run()
+    PrimaryObservationParser(log, config).run()
+    GroupedObservationParser(log, config).run()
+
+
+def rank(log, config):
     ranker = Ranker(log, config)
-    enricher = Enricher(log, config)
-
-    indicator_parser.run()
-    secondary_observation_parser.run()
-    primary_observation_parser.run()
-    grouped_observation_parser.run()
     ranker.run()
-    enricher.run()
 
+
+def enrich(log, config):
+    enricher = Enricher(log, config)
+    enricher.run()
 
 if __name__ == "__main__":
     run()
