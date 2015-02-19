@@ -6,6 +6,9 @@ __author__ = 'Miguel'
 
 
 class GroupedObservationParser(Parser):
+    """
+    Retrieves the grouped observations from the data Excel file and stores them into the database.
+    """
 
     def __init__(self, log, config):
         super(GroupedObservationParser, self).__init__(log, config)
@@ -42,6 +45,11 @@ class GroupedObservationParser(Parser):
                 self._excel_grouped_observations.append(observation)
 
     def _store_grouped_observations(self):
+        """
+        Before storing the observations and their information into the database it's necessary to transform them from
+        the auxiliary Excel model to the domain model.
+        :return:
+        """
         self._log.info("\tStoring grouped observations sheet...")
         print "\tStoring grouped observations sheet..."
         for excel_observation in self._excel_grouped_observations:

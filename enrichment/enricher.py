@@ -8,6 +8,12 @@ __author__ = 'Miguel'
 
 
 class Enricher(object):
+    """
+    This class is responsible for enriching the areas documents of the database with further information. Note that,
+    given the variety of data sources and the different ways of them of providing information, it's necessary to
+    implement a function for each one. Currently, the enrichment is done from the information provided by two data
+    sources: the World Bank and the International Telecommunication Union (ITU)
+    """
 
     def __init__(self, log, config):
         self._log = log
@@ -23,6 +29,11 @@ class Enricher(object):
         self._enrich()
 
     def _retrieve_world_bank_indicators(self):
+        """
+        The data provided by the World Bank is available through an API that returns JSON documents. This data will be
+        modeled by the auxiliary class IndicatorData for its posterior storage in the database.
+        :return:
+        """
         self._log.info("\tRetrieving data from World Bank")
         print "\tRetrieving data from World Bank"
         uri_pattern = self._config.get("ENRICHMENT", "WB_INDICATOR_URL_QUERY_PATTERN")
@@ -52,6 +63,13 @@ class Enricher(object):
                     self._log.warning("\t\t" + area.iso3 + " has no values")
 
     def _retrieve_itu_indicators(self):
+        """
+        The data provided by the ITU is retrieved from two JSON files; one per indicator. Note that these documents
+        where previously obtained by parsing a PDF report, wich is available through the ITU_PROVIDER_URL value in
+        the config file. This data will be modeled by the auxiliary class IndicatorData for its posterior storage
+        in the database.
+        :return:
+        """
         self._log.info("\tRetrieving data from ITU")
         print "\tRetrieving data from ITU"
         areas = self._area_repo.find_countries("iso3")

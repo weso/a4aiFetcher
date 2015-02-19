@@ -6,6 +6,9 @@ __author__ = 'Miguel'
 
 
 class SecondaryObservationParser(Parser):
+    """
+    Retrieves the secondary observations from the data Excel file and stores them into the database.
+    """
 
     def __init__(self, log, config):
         super(SecondaryObservationParser, self).__init__(log, config)
@@ -42,6 +45,11 @@ class SecondaryObservationParser(Parser):
                 self._excel_secondary_observations.append(observation)
 
     def _store_secondary_observations(self):
+        """
+        Before storing the observations and their information into the database it's necessary to transform them from
+        the auxiliary Excel model to the domain model.
+        :return:
+        """
         self._log.info("\tStoring secondary observations...")
         print "\tStoring secondary observations..."
         for excel_observation in self._excel_secondary_observations:

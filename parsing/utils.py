@@ -4,6 +4,12 @@ from a4ai.domain.model.observation.year import Year
 
 __author__ = 'Miguel'
 
+"""
+This module provides utility functions to the parsing classes. Among these functions, there are the ones responsible
+for transforming the elements retrieved from the Excel files from their auxiliary model classes to the corresponding
+domain model classes.
+"""
+
 
 def string_to_bool(string):
     return string in ["True", "true"]

@@ -2,6 +2,9 @@ __author__ = 'Miguel'
 
 
 class IndicatorData(object):
+    """
+    This class models each piece of indicator data with wich each area is about to be enriched.
+    """
 
     def __init__(self, indicator_code, year, value, provider_name, provider_url):
         self._indicator_code = indicator_code
