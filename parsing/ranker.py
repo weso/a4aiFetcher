@@ -5,6 +5,11 @@ __author__ = 'Miguel'
 
 
 class Ranker(object):
+    """
+    This class calculates the ranking of the countries for their observation values for each indicator. There are two
+    types of rankings; the overall one, made with the whole list of countries, and the typed one, made only with the
+    list of countries that have the same income type that the one it's being ranked (developing or emerging).
+    """
 
     def __init__(self, log, config):
         self._log = log

@@ -6,6 +6,9 @@ __author__ = 'Miguel'
 
 
 class IndicatorParser(Parser):
+    """
+    Retrieves the indicators and their information from the structure Excel file and stores them into the database.
+    """
 
     def __init__(self, log, config):
         super(IndicatorParser, self).__init__(log, config)
@@ -16,7 +19,7 @@ class IndicatorParser(Parser):
         print "Running indicator parser"
         indicator_sheet = self._initialize_indicator_sheet()
         self._retrieve_indicators(indicator_sheet)
-        self._store_indicators(self._indicator_repo)
+        self._store_indicators()
 
     def _initialize_indicator_sheet(self):
         self._log.info("\tGetting indicators sheet...")
@@ -54,16 +57,21 @@ class IndicatorParser(Parser):
                                        is_percentage)
             self._excel_indicators.append(indicator)
 
-    def _store_indicators(self, indicator_repo):
+    def _store_indicators(self):
+        """
+        Before storing the indicators and their information into the database it's necessary to transform them from
+        the auxiliary Excel model to the domain model.
+        :return:
+        """
         self._log.info("\tStoring indicators...")
         print "\tStoring indicators..."
         for excel_indicator in self._excel_indicators:
             indicator = excel_indicator_to_dom(excel_indicator)
             indicator_uri = self._config.get("OTHERS", "HOST") + indicator.indicator
-            indicator_repo.insert_indicator(indicator,
-                                            indicator_uri=indicator_uri,
-                                            index_name="INDEX",
-                                            subindex_name=excel_indicator.subindex_code,
-                                            provider_name=indicator.provider_name,
-                                            provider_url=indicator.provider_url,
-                                            is_percentage=excel_indicator.is_percentage)
+            self._indicator_repo.insert_indicator(indicator,
+                                                  indicator_uri=indicator_uri,
+                                                  index_name="INDEX",
+                                                  subindex_name=excel_indicator.subindex_code,
+                                                  provider_name=indicator.provider_name,
+                                                  provider_url=indicator.provider_url,
+                                                  is_percentage=excel_indicator.is_percentage)

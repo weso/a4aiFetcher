@@ -6,6 +6,9 @@ __author__ = 'Miguel'
 
 
 class PrimaryObservationParser(Parser):
+    """
+    Retrieves the primary observations from the data Excel file and stores them into the database.
+    """
 
     def __init__(self, log, config):
         super(PrimaryObservationParser, self).__init__(log, config)
@@ -42,6 +45,11 @@ class PrimaryObservationParser(Parser):
                 self._excel_primary_observations.append(observation)
 
     def _store_primary_observations(self):
+        """
+        Before storing the observations and their information into the database it's necessary to transform them from
+        the auxiliary Excel model to the domain model.
+        :return:
+        """
         self._log.info("\tStoring primary observations...")
         print "\tStoring primary observations..."
         for excel_observation in self._excel_primary_observations:
