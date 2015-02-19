@@ -1,6 +1,6 @@
-from webindex.domain.model.indicator.indicator import *
-from webindex.domain.model.observation.observation import *
-from webindex.domain.model.observation.year import Year
+from a4ai.domain.model.indicator.indicator import *
+from a4ai.domain.model.observation.observation import *
+from a4ai.domain.model.observation.year import Year
 
 __author__ = 'Miguel'
 
