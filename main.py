@@ -21,8 +21,8 @@ def run():
     log = logging.getLogger("a4aiFetcher")
     config = ConfigParser.RawConfigParser()
     config.read("configuration.ini")
-    #parse(log, config)
-    #rank(log, config)
+    parse(log, config)
+    rank(log, config)
     enrich(log, config)
 
 
