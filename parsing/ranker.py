@@ -36,10 +36,18 @@ class Ranker(object):
             observations = self._observation_repo.find_observations(indicator_code=indicator.indicator)
             ordered = sorted(observations, key=lambda observation: observation.value, reverse=True)
             rank = 1
+            offset = 0
+            previous = None
             for obs in ordered:
                 if obs.value != "":
-                    self._observation_repo.update_observation_ranking(obs, rank)
+                    if previous is not None:
+                        if previous.value == obs.value:
+                            offset += 1
+                        elif offset != 0:
+                            offset = 0
+                    self._observation_repo.update_observation_ranking(obs, rank - offset)
                     rank += 1
+                    previous = obs
 
     def _rank_emerging_countries_observations(self):
         self._log.info("\tRanking observations by type of emerging countries")
@@ -50,10 +58,18 @@ class Ranker(object):
                                                                              area_type="Emerging")
             emerging_ordered = sorted(emerging_observations, key=lambda observation: observation.value, reverse=True)
             rank_emerging = 1
+            offset = 0
+            previous = None
             for emerging_obs in emerging_ordered:
                 if emerging_obs.value != "":
-                    self._observation_repo.update_observation_ranking_type(emerging_obs, rank_emerging)
+                    if previous is not None:
+                        if previous.value == emerging_obs.value:
+                            offset += 1
+                        elif offset != 0:
+                            offset = 0
+                    self._observation_repo.update_observation_ranking_type(emerging_obs, rank_emerging - offset)
                     rank_emerging += 1
+                    previous = emerging_obs
 
     def _rank_developing_countries_observations(self):
         self._log.info("\tRanking observations by type of developing countries")
@@ -64,7 +80,15 @@ class Ranker(object):
                                                                                area_type="Developing")
             developing_ordered = sorted(developing_observations, key=lambda observation: observation.value, reverse=True)
             rank_developing = 1
+            offset = 0
+            previous = None
             for developing_obs in developing_ordered:
                 if developing_obs.value != "":
-                    self._observation_repo.update_observation_ranking_type(developing_obs, rank_developing)
+                    if previous is not None:
+                        if previous.value == developing_obs.value:
+                            offset += 1
+                        elif offset != 0:
+                            offset = 0
+                    self._observation_repo.update_observation_ranking_type(developing_obs, rank_developing - offset)
                     rank_developing += 1
+                    previous = developing_obs

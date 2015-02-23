@@ -34,13 +34,11 @@ def parse(log, config):
 
 
 def rank(log, config):
-    ranker = Ranker(log, config)
-    ranker.run()
+    Ranker(log, config).run()
 
 
 def enrich(log, config):
-    enricher = Enricher(log, config)
-    enricher.run()
+    Enricher(log, config).run()
 
 if __name__ == "__main__":
     run()
