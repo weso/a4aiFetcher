@@ -41,6 +41,7 @@ class IndicatorParser(Parser):
         provider_url_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_PROVIDER_URL_COLUMN")
         republishable_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_REPUBLISHABLE_COLUMN")
         is_percentage_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_IS_PERCENTAGE_COLUMN")
+        scale_column = self._config.getint("STRUCTURE_ACCESS", "INDICATOR_SCALE_COLUMN")
         for row_number in range(start_row, indicator_sheet.nrows):
             retrieved_code = indicator_sheet.cell(row_number, code_column).value
             code = retrieved_code.upper().replace(" ", "_")
@@ -53,8 +54,9 @@ class IndicatorParser(Parser):
             republishable = string_to_bool(retrieved_republishable)
             retrieved_is_percentage = indicator_sheet.cell(row_number, is_percentage_column).value
             is_percentage = string_to_bool(retrieved_is_percentage)
+            scale = indicator_sheet.cell(row_number, scale_column).value
             indicator = ExcelIndicator(code, name, _type, subindex_code, provider_name, provider_url, republishable,
-                                       is_percentage)
+                                       is_percentage, scale)
             self._excel_indicators.append(indicator)
 
     def _store_indicators(self):
@@ -74,4 +76,5 @@ class IndicatorParser(Parser):
                                                   subindex_name=excel_indicator.subindex_code,
                                                   provider_name=indicator.provider_name,
                                                   provider_url=indicator.provider_url,
-                                                  is_percentage=excel_indicator.is_percentage)
+                                                  is_percentage=excel_indicator.is_percentage,
+                                                  scale=excel_indicator.scale)
