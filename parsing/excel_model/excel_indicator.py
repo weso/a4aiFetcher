@@ -2,16 +2,22 @@ __author__ = 'Miguel'
 
 
 class ExcelIndicator(object):
+    """
+    Auxiliary class for modeling the indicators information retrieved from the Excel structure file. Each field
+    corresponds with the columns in the file.
+    """
 
-    def __init__(self, code, name, type, subindex_code, provider_name, provider_url, republishable, is_percentage):
+    def __init__(self, code, name, _type, subindex_code, provider_name, provider_url, republishable, is_percentage,
+                 scale):
         self._code = code
         self._name = name
-        self._type = type
+        self._type = _type
         self._subindex_code = subindex_code
         self._provider_name = provider_name
         self._provider_url = provider_url
         self._republishable = republishable
         self._is_percentage = is_percentage
+        self._scale = scale
 
     @property
     def code(self):
@@ -44,3 +50,7 @@ class ExcelIndicator(object):
     @property
     def is_percentage(self):
         return self._is_percentage
+
+    @property
+    def scale(self):
+        return self._scale

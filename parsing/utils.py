@@ -1,13 +1,18 @@
-from webindex.domain.model.indicator.indicator import *
-from webindex.domain.model.observation.observation import *
-from webindex.domain.model.observation.year import Year
+from a4ai.domain.model.indicator.indicator import *
+from a4ai.domain.model.observation.observation import *
+from a4ai.domain.model.observation.year import Year
 
 __author__ = 'Miguel'
 
+"""
+This module provides utility functions to the parsing classes. Among these functions, there are the ones responsible
+for transforming the elements retrieved from the Excel files from their auxiliary model classes to the corresponding
+domain model classes.
+"""
+
 
 def string_to_bool(string):
-    ret = string in ["True", "true"]
-    return ret
+    return string in ["True", "true"]
 
 
 def excel_indicator_to_dom(excel_indicator):
@@ -31,6 +36,6 @@ def excel_observation_to_dom(excel_observation, area, indicator):
                                      provider_name=indicator.provider_name,
                                      provider_url=indicator.provider_url,
                                      short_name=area.short_name,
-                                     year=Year(2014),
+                                     year=Year(2015),
                                      continent=area.area)
     return observation

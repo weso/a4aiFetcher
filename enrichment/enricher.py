@@ -8,6 +8,12 @@ __author__ = 'Miguel'
 
 
 class Enricher(object):
+    """
+    This class is responsible for enriching the areas documents of the database with further information. Note that,
+    given the variety of data sources and the different ways of them of providing information, it's necessary to
+    implement a function for each one. Currently, the enrichment is done from the information provided by two data
+    sources: the World Bank and the International Telecommunication Union (ITU)
+    """
 
     def __init__(self, log, config):
         self._log = log
@@ -18,13 +24,16 @@ class Enricher(object):
     def run(self):
         self._log.info("Enriching areas")
         print "Enriching areas"
-        self.retrieve_world_bank_indicators()
-        self.retrieve_itu_indicators()
-        self.enrich()
-        self._log.info("Finished enriching areas")
-        print "Finished enriching areas"
+        self._retrieve_world_bank_indicators()
+        self._retrieve_itu_indicators()
+        self._enrich()
 
-    def retrieve_world_bank_indicators(self):
+    def _retrieve_world_bank_indicators(self):
+        """
+        The data provided by the World Bank is available through an API that returns JSON documents. This data will be
+        modeled by the auxiliary class IndicatorData for its posterior storage in the database.
+        :return:
+        """
         self._log.info("\tRetrieving data from World Bank")
         print "\tRetrieving data from World Bank"
         uri_pattern = self._config.get("ENRICHMENT", "WB_INDICATOR_URL_QUERY_PATTERN")
@@ -52,10 +61,15 @@ class Enricher(object):
                 else:
                     print "\t\t" + area.iso3 + " has no values"
                     self._log.warning("\t\t" + area.iso3 + " has no values")
-        self._log.info("\tFinished data from World Bank")
-        print "\tFinished data from World Bank"
 
-    def retrieve_itu_indicators(self):
+    def _retrieve_itu_indicators(self):
+        """
+        The data provided by the ITU is retrieved from two JSON files; one per indicator. Note that these documents
+        where previously obtained by parsing a PDF report, wich is available through the ITU_PROVIDER_URL value in
+        the config file. This data will be modeled by the auxiliary class IndicatorData for its posterior storage
+        in the database.
+        :return:
+        """
         self._log.info("\tRetrieving data from ITU")
         print "\tRetrieving data from ITU"
         areas = self._area_repo.find_countries("iso3")
@@ -79,11 +93,10 @@ class Enricher(object):
                                 self._retrieved_data[area.iso3].append(indicator_data)
                 if not found:
                     print "\t\t\t" + area.name + " not found"
+                    self._log.warning("\t\t" + area.iso3 + " not found in " + file_name)
             json_data.close()
-        self._log.info("\tFinished retrieving data from ITU")
-        print "\tFinished retrieving data from ITU"
 
-    def enrich(self):
+    def _enrich(self):
         self._log.info("\tUpdating areas")
         print "\tUpdating areas"
         areas = self._area_repo.find_countries("iso3")
@@ -93,5 +106,3 @@ class Enricher(object):
             for data_element in data:
                 print "\t\t\t" + data_element.indicator_code + " " + data_element.year + " " + data_element.value
             self._area_repo.enrich_country(area.iso3, data)
-        self._log.info("\tFinished updating areas")
-        print "\tFinished updating areas"

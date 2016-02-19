@@ -2,6 +2,9 @@ __author__ = 'Miguel'
 
 
 class ExcelObservation(object):
+    """
+    Auxiliary class for modeling the observations information retrieved from the Excel structure file.
+    """
 
     def __init__(self, country_name, indicator_code, _value):
         self._country_name = country_name
