@@ -27,7 +27,7 @@ def run():
 
 
 def parse(log, config):
-    IndicatorParser(log, config).run()
+    # IndicatorParser(log, config).run()
     SecondaryObservationParser(log, config).run()
     PrimaryObservationParser(log, config).run()
     GroupedObservationParser(log, config).run()
@@ -38,7 +38,9 @@ def rank(log, config):
 
 
 def enrich(log, config):
+    # pass
     Enricher(log, config).run()
+
 
 if __name__ == "__main__":
     run()

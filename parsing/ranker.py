@@ -33,7 +33,7 @@ class Ranker(object):
         print "\tRanking all countries observations..."
         indicators = self._indicator_repo.find_indicators()
         for indicator in indicators:
-            observations = self._observation_repo.find_observations(indicator_code=indicator.indicator)
+            observations = self._observation_repo.find_observations(indicator_code=indicator.indicator, year="LATEST")
             ordered = sorted(observations, key=lambda observation: observation.value, reverse=True)
             rank = 1
             offset = 0
@@ -55,7 +55,7 @@ class Ranker(object):
         indicators = self._indicator_repo.find_indicators()
         for indicator in indicators:
             emerging_observations = self._observation_repo.find_observations(indicator_code=indicator.indicator,
-                                                                             area_type="Emerging")
+                                                                             area_type="Emerging", year="LATEST")
             emerging_ordered = sorted(emerging_observations, key=lambda observation: observation.value, reverse=True)
             rank_emerging = 1
             offset = 0
@@ -77,7 +77,8 @@ class Ranker(object):
         indicators = self._indicator_repo.find_indicators()
         for indicator in indicators:
             developing_observations = self._observation_repo.find_observations(indicator_code=indicator.indicator,
-                                                                               area_type="Developing")
+                                                                               area_type="Developing",
+                                                                               year="LATEST")
             developing_ordered = sorted(developing_observations, key=lambda observation: observation.value, reverse=True)
             rank_developing = 1
             offset = 0

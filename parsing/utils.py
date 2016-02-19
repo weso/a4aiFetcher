@@ -36,6 +36,6 @@ def excel_observation_to_dom(excel_observation, area, indicator):
                                      provider_name=indicator.provider_name,
                                      provider_url=indicator.provider_url,
                                      short_name=area.short_name,
-                                     year=Year(2014),
+                                     year=Year(2015),
                                      continent=area.area)
     return observation

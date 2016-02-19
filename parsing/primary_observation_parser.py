@@ -39,7 +39,7 @@ class PrimaryObservationParser(Parser):
         for row_number in range(country_start_row, primary_obs_sheet.nrows):
             for column_number in range(indicator_start_column, primary_obs_sheet.ncols):
                 country_name = primary_obs_sheet.cell(row_number, country_column).value
-                indicator_code = primary_obs_sheet.cell(indicator_codes_row, column_number).value
+                indicator_code = primary_obs_sheet.cell(indicator_codes_row, column_number).value.replace(" ", "_")
                 observation_value = primary_obs_sheet.cell(row_number, column_number).value
                 observation = ExcelObservation(country_name, indicator_code, observation_value)
                 self._excel_primary_observations.append(observation)
