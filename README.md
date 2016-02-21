@@ -10,11 +10,15 @@ This code has been tested for the next Python versions:
 **Dependences:**
 - xlrd
 
+
 **Integration with a4aidom repository:**
+
 a4aiFetcher uses code of a4aidom: model objects, utilities, communication with MongoDB… When cloning the a4aiFetcher repository, the root should be placed within the structure of an a4aidom repository package tree, in the path:
 */a4aidom/application/a4aiFetcher*
 
+
  **Execution**
+ 
  If you want to execute a4aiFetcher from console, move to the path:
 *{parent_directory_of_root}/a4aidom/application/a4aiFetcher*
 
@@ -32,7 +36,7 @@ a4aiFetcher parses the information of several local files (xsl and json) and a R
 - indicators: documents of metadata of each a4ai indicatros.
 - observations: pieces of information that links a value with certain area, date and indicator.
 
-An example of the resulting state of those collections after a succesfull execution of a4aiFetcher can be found in (sample\_files/output)[https://github.com/weso/a4aiFetcher/tree/develop/sample_files/output].
+An example of the resulting state of those collections after a succesfull execution of a4aiFetcher can be found in [sample\_files/output](https://github.com/weso/a4aiFetcher/tree/develop/sample_files/output).
 
 ## Modules of a4aiFetcher
 main.py launches the execution of different tasks, each one encapsuled in a single method that relies in a differenced internal module.
